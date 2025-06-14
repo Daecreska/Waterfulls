@@ -1,0 +1,328 @@
+:root {
+    --deep-blue: #020024;
+    --mid-blue: #090979;
+    --light-blue: #00d4ff;
+    --cyan-glow: #21d4fd;
+    --silver-white: #f0f8ff;
+}
+
+/* Общая подготовка */
+body {
+    margin: 0;
+    background-color: var(--deep-blue);
+    color: var(--silver-white);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow-x: hidden;
+    overflow-y: hidden; /* Изначально скролл выключен */
+}
+
+/* ЭКРАН 1: ПОВЕРХНОСТЬ ВОДЫ */
+#surface {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, var(--mid-blue) 0%, var(--deep-blue) 70%);
+    z-index: 100;
+    cursor: none; /* Скрываем стандартный курсор */
+    transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+/* Анимация ряби на воде */
+#surface::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.05" numOctaves="3" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="5" /></filter><rect width="100" height="100" filter="url(%23f)" opacity="0.2"/></svg>');
+    animation: ripple 20s linear infinite;
+    z-index: 101;
+}
+
+@keyframes ripple {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-25%, -25%); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Источник света под водой (управляется JS) */
+#light-orb {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.2), transparent 60%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Чтобы не мешал кликам */
+    z-index: 102;
+    transition: transform 0.1s ease-out;
+}
+
+/* Центральный символ */
+#entry-symbol {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    color: var(--cyan-glow);
+    text-shadow: 0 0 15px var(--cyan-glow), 0 0 30px var(--cyan-glow);
+    animation: pulse 4s infinite ease-in-out;
+    z-index: 103;
+}
+.entry-prompt {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--silver-white);
+    opacity: 0.5;
+    animation: fadeInOut 4s infinite ease-in-out;
+    z-index: 103;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}
+
+/* Эффект погружения */
+body.dived #surface {
+    opacity: 0;
+    transform: scale(2);
+    pointer-events: none;
+}
+
+/* ЭКРАН 2: ВОДОПАД */
+#waterfall {
+    position: relative;
+    width: 100%;
+    min-height: 400vh; /* Высота для скролла */
+    isolation: isolate; /* Для корректной работы z-index */
+    transition: transform 0.5s ease-out;
+}
+
+/* Настройка параллакса */
+#content-stream {
+    position: relative;
+    z-index: 10;
+}
+.parallax-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+#deep-water-bg {
+    background: linear-gradient(180deg, var(--mid-blue) 0%, var(--deep-blue) 100%);
+    z-index: 1;
+}
+#bubbles-layer {
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(200,240,255,0.2) 2px, transparent 0),
+        radial-gradient(circle at 80% 10%, rgba(200,240,255,0.3) 1px, transparent 0),
+        radial-gradient(circle at 50% 70%, rgba(200,240,255,0.2) 3px, transparent 0);
+    background-size: 100% 1000px;
+    animation: flow-up 20s linear infinite;
+    z-index: 5;
+    opacity: 0.5;
+}
+#particles-layer {
+    background-image: 
+        radial-gradient(circle at 10% 80%, var(--cyan-glow) 1px, transparent 0),
+        radial-gradient(circle at 75% 40%, var(--silver-white) 1px, transparent 0);
+    background-size: 100% 500px;
+    animation: flow-up 10s linear infinite;
+    z-index: 15;
+    opacity: 0.7;
+}
+
+@keyframes flow-up {
+    from { background-position-y: 1000px; }
+    to { background-position-y: 0; }
+}
+
+/* Контентные блоки */
+.content-block {
+    max-width: 800px;
+    margin: 50vh auto; /* Большие отступы для эффекта погружения */
+    padding: 40px;
+    background: rgba(2, 0, 36, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+    
+    /* Анимация "кристаллизации" */
+    opacity: 0;
+    transform: scale(0.8) translateY(100px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.content-block.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+.content-block img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+/* "Жидкий" шрифт */
+.liquid-text {
+    animation: liquid-flow 5s infinite ease-in-out;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+@keyframes liquid-flow {
+    0%, 100% { transform: skewX(0deg); }
+    50% { transform: skewX(1deg); }
+}
+
+/* ЭЛЕМЕНТЫ ИНТЕРФЕЙСА */
+
+/* Меню-пещера */
+#menu-trigger-zone {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 30px; /* Зона для захвата */
+    height: 100vh;
+    z-index: 50;
+    cursor: e-resize;
+}
+#menu-trigger-line {
+    position: absolute;
+    left: 5px;
+    top: 45%;
+    width: 2px;
+    height: 10%;
+    background: var(--cyan-glow);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--cyan-glow);
+    opacity: 0.5;
+    transition: all 0.3s;
+}
+#menu-trigger-zone:hover #menu-trigger-line {
+    opacity: 1;
+    left: 8px;
+    box-shadow: 0 0 15px var(--cyan-glow), 0 0 25px var(--cyan-glow);
+}
+#cave-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 100vh;
+    background: radial-gradient(ellipse at left, #1a1a2e, #16213e, #0f3460);
+    transform: translateX(-100%);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 49;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid var(--cyan-glow);
+}
+body.menu-open #cave-menu {
+    transform: translateX(0);
+}
+body.menu-open #waterfall {
+    transform: translateX(150px) scale(0.9); /* Сдвигаем и уменьшаем водопад */
+    filter: blur(5px);
+}
+#cave-menu ul {
+    list-style: none;
+    padding: 0;
+}
+#cave-menu li {
+    margin: 30px 0;
+}
+#cave-menu a {
+    color: var(--silver-white);
+    text-decoration: none;
+    font-size: 1.8rem;
+    padding: 10px;
+    transition: all 0.3s;
+    text-shadow: 0 0 5px transparent;
+}
+#cave-menu a:hover {
+    color: var(--cyan-glow);
+    text-shadow: 0 0 10px var(--cyan-glow), 0 0 20px var(--cyan-glow);
+    animation: liquid-flow 3s infinite ease-in-out;
+}
+
+/* Кнопки и ссылки */
+a, button {
+    position: relative;
+}
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(0, 212, 255, 0.7);
+    transform: scale(0);
+    animation: ripple-effect 0.6s linear;
+    pointer-events: none;
+}
+@keyframes ripple-effect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* МИНИ-ИГРА */
+.game-bubble {
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, var(--cyan-glow) 30%, rgba(0,212,255,0.5) 100%);
+    border-radius: 50%;
+    position: absolute; /* Позиционируем относительно родителя */
+    right: 10%;
+    bottom: 20%;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--cyan-glow);
+    animation: float 6s ease-in-out infinite;
+    transition: transform 0.2s, opacity 0.2s;
+}
+.game-bubble:hover {
+    transform: scale(1.2);
+}
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 200;
+    background: rgba(2, 0, 36, 0.9);
+    display: none; /* Скрыто по умолчанию */
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+#game-canvas {
+    border: 1px solid var(--cyan-glow);
+}
+#game-overlay {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--silver-white);
+}

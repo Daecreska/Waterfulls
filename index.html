@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цифровой Водопад</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ЭКРАН 1: ПОВЕРХНОСТЬ ВОДЫ -->
+    <div id="surface">
+        <div id="surface-vignette"></div>
+        <div id="light-orb"></div>
+        <div id="entry-symbol">❖</div>
+        <p class="entry-prompt">Кликните, чтобы погрузиться</p>
+    </div>
+
+    <!-- СКРЫТОЕ МЕНЮ: ПЕЩЕРА ЗА ВОДОПАДОМ -->
+    <div id="menu-trigger-zone">
+        <div id="menu-trigger-line"></div>
+    </div>
+    <nav id="cave-menu">
+        <ul>
+            <li><a href="#">Исток</a></li>
+            <li><a href="#">Глубины</a></li>
+            <li><a href="#">Течения</a></li>
+            <li><a href="#">Сокровища</a></li>
+            <li><a href="#">Бездна</a></li>
+        </ul>
+    </nav>
+
+    <!-- ЭКРАН 2: ПОГРУЖЕНИЕ -->
+    <div id="waterfall">
+        <!-- Слои параллакса -->
+        <div class="parallax-layer" id="deep-water-bg"></div>
+        <div class="parallax-layer" id="bubbles-layer"></div>
+        <div class="parallax-layer" id="particles-layer"></div>
+
+        <!-- Поток контента -->
+        <main id="content-stream">
+            <section class="content-block">
+                <h2 class="liquid-text">Начало Потока</h2>
+                <p>Мысли рождаются здесь, в самом верху течения. Они еще не оформились, это лишь легкие ряби на поверхности сознания, обещающие превратиться в мощные идеи.</p>
+                <img src="https://picsum.photos/seed/water1/600/400" alt="Абстрактное изображение">
+            </section>
+
+            <section class="content-block">
+                <h2 class="liquid-text">Первое Течение</h2>
+                <p>Идея обретает форму. Как кристалл, вырастающий в насыщенном растворе, она выхватывает из потока элементы, строя свою структуру. Это хрупкий, но уже ясный образ.</p>
+                <!-- Игровой триггер -->
+                <div class="game-bubble"></div>
+            </section>
+            
+            <section class="content-block">
+                <h2 class="liquid-text">Водоворот</h2>
+                <p>Здесь идеи сталкиваются, смешиваются, создавая новые, непредсказуемые комбинации. Это хаос и порядок одновременно. Чтобы найти жемчужину, нужно нырнуть в самый центр.</p>
+                 <!-- Игровой триггер -->
+                <div class="game-bubble"></div>
+                 <p>Некоторые пузырьки необычны. Попробуй поймать три.</p>
+            </section>
+
+            <section class="content-block">
+                <h2 class="liquid-text">Затонувшие Сокровища</h2>
+                <p>Давно забытые мысли, проекты, воспоминания. Они лежат на дне, покрытые илом времени. Но стоит пролить на них свет, и они засияют с новой силой.</p>
+                <img src="https://picsum.photos/seed/water2/600/400" alt="Абстрактное изображение">
+                 <!-- Игровой триггер -->
+                 <div class="game-bubble"></div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- ЭКРАН 4: МИНИ-ИГРА -->
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="game-overlay">
+            <h3 id="game-title">Гонка Светлячка</h3>
+            <p id="game-score">Очки: 0</p>
+        </div>
+    </div>
+
+
+    <!-- Аудио для атмосферы (ссылки заменены на плейсхолдеры, нужно будет найти и добавить свои) -->
+    <!-- 
+    <audio id="bg-sound" loop src="path/to/waterfall-ambient.mp3"></audio>
+    <audio id="splash-sound" src="path/to/splash.mp3"></audio>
+    <audio id="bubble-sound" src="path/to/bubble-pop.mp3"></audio>
+    <audio id="hover-sound" src="path/to/chime.mp3"></audio>
+    -->
+
+    <script src="script.js"></script>
+</body>
+</html>
